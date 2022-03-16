@@ -2,7 +2,6 @@
 # bin/compile BUILD_DIR CACHE_DIR ENV_DIR
 # https://devcenter.heroku.com/articles/buildpack-api#bin-compile
 
-set -eo pipefail
 set -o errtrace
 set -o nounset
 
@@ -223,11 +222,16 @@ if [ "$BUILD_DIR" != "/app" ]; then
 
   # make inventory of current contents of /app (before sync)
   # so when copied back, these files can be excluded
-  (
-    cd /app
-    find . -maxdepth 1 -type d | grep -v '^.$' | cut -c 2- > "${BUILD_DIR}/.rsync-excludes"
-    find . -maxdepth 1 -type f | cut -c 2- >> "${BUILD_DIR}/.rsync-excludes"
-  )
+
+  ############# Fix FPER Tinea ############
+  # Disabled because first command failed at scalingo
+  # And the /app is always empty when build starts
+  #(
+  #  cd /app
+  #  find . -maxdepth 1 -type d | grep -v '^.$' | cut -c 2- > "${BUILD_DIR}/.rsync-excludes"
+  #  find . -maxdepth 1 -type f | cut -c 2- >> "${BUILD_DIR}/.rsync-excludes"
+  #)
+  touch ${BUILD_DIR}/.rsync-excludes
 
   # copy everything to /app
   rsync -a "${BUILD_DIR}/" /app/
