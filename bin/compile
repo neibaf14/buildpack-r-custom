@@ -2,6 +2,11 @@
 # bin/compile BUILD_DIR CACHE_DIR ENV_DIR
 # https://devcenter.heroku.com/articles/buildpack-api#bin-compile
 
+############## FPER Tinea : add debug mode ##############
+if [ -n "$BUILDPACK_DEBUG" ]; then
+  set -x
+fi
+
 set -eo pipefail
 set -o errtrace
 set -o nounset
